@@ -1,20 +1,33 @@
-export interface User {
-  id: string;
-  googleId: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  role: "faculty" | "admin";
-  profilePicture?: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { supabase } from "../config/supabaseClient.ts";
 
-export interface GoogleAuthPayload {
-  token: string; // Google ID token
-}
+export const authenticateUser = async (googleId: string, email: string) => {
+  const { data: user, error: fetchError } = await supabase
+    .from("faculty_profiles")
+    .select("*")
+    .eq("email", email)
+    .single();
 
-export interface AuthResponse {
-  token: string;
-  user: Omit<User, "googleId">;
+  if (fetchError || !user) {
+    console.error("Error fetching user by email:", fetchError);
+    return null;
+  }
+
+  // -- COMMENTED OUT FOR NOW --
+
+  // if(!user.google_id) {
+  //   const { data: updatedUser, error: updateError } = await supabase
+  //     .from("faculty_profiles")
+  //     .update({ google_id: googleId })
+  //     .eq("email", email)
+  //     .single();
+
+  //   if (updateError || !updatedUser) {
+  //     console.error("Error updating user with Google ID:", updateError);
+  //     return null;
+  //   }
+    
+  //   return updatedUser;
+  // }
+
+  return user;
 }
