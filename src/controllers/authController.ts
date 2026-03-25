@@ -33,8 +33,14 @@ export const googleAuth = async (req: Request, res: Response) => {
     });
     const payload = ticket.getPayload();
 
-    if (!payload) {
+    if (!payload || !payload.email) {
       return res.status(400).json({ error: "Unauthorized user" });
+    }
+
+    if(!payload.email.endsWith("@tup.edu.ph")) {
+      return res.status(403).json({ 
+        error: "Please use your @tup.edu.ph institutional email to sign in." 
+      });
     }
 
     const { sub: googleId, email } = payload;
@@ -50,7 +56,12 @@ export const googleAuth = async (req: Request, res: Response) => {
       { expiresIn: "7d" },
     );
 
-    res.json({ user: payload, jwt: jwtToken, userInfo: userData });
+    res.cookie("token", jwtToken, {
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: "/",
+    });
+    res.status(200).json({ user: payload, userInfo: userData });
   } catch (error) {
     console.error("Google authentication failed:", error);
     res.status(401).json({ error: "Authentication failed" });

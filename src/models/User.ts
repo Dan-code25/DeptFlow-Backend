@@ -3,7 +3,7 @@ import { supabase } from "../config/supabaseClient.ts";
 export const authenticateUser = async (googleId: string, email: string) => {
   const { data: user, error: fetchError } = await supabase
     .from("faculty_profiles")
-    .select("*")
+    .select("role")
     .eq("email", email)
     .single();
 
