@@ -37,9 +37,9 @@ export const googleAuth = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Unauthorized user" });
     }
 
-    if(!payload.email.endsWith("@tup.edu.ph")) {
-      return res.status(403).json({ 
-        error: "Please use your @tup.edu.ph institutional email to sign in." 
+    if (!payload.email.endsWith("@tup.edu.ph")) {
+      return res.status(403).json({
+        error: "Please use your @tup.edu.ph institutional email to sign in.",
       });
     }
 
@@ -51,7 +51,12 @@ export const googleAuth = async (req: Request, res: Response) => {
     }
 
     const jwtToken = jwt.sign(
-      { sub: payload.sub, email: payload.email },
+      {
+        sub: payload.sub,
+        email: payload.email,
+        role: userData.role,
+        id: userData.id,
+      },
       jwtSecret!,
       { expiresIn: "7d" },
     );

@@ -1,11 +1,13 @@
 import "dotenv/config.js";
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import type { Express, Request, Response, NextFunction } from "express";
 
 import { supabase } from "./config/supabaseClient.ts";
 
 import authRoutes from "./routes/authRoutes.ts";
+import profileRoutes from "./routes/profileRoutes.ts";
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
@@ -14,9 +16,15 @@ const PORT = process.env.PORT || 3000;
 app.use(cors({ credentials: true, origin: /^http:\/\/localhost:\d{4}$/ }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // Routes
-app.use("/api/auth", authRoutes); 
+app.use("/api/auth", authRoutes);
+app.use("/api/profile", profileRoutes);
+
+app.use("/test", (req: Request, res: Response) => {
+  res.json({ message: "API is working!" });
+});
 
 //db connection test
 try {
@@ -33,4 +41,3 @@ app.listen(PORT, () => {
 });
 
 export default app;
-
