@@ -1,6 +1,4 @@
 import { supabase } from "../config/supabaseClient.ts";
-import type { AuthRequest } from "../middleware/authenticate.ts";
-import type { Response, Request } from "express";
 
 export const authenticateUser = async (googleId: string, email: string) => {
   const { data: profile, error: profileError } = await supabase

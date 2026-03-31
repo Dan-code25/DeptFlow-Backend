@@ -1,6 +1,11 @@
 import type { Request, Response } from "express";
 import type { AuthRequest } from "../middleware/authenticate.ts";
-import { fetchUserProfileById, updateProfileData, updateProfilePicture, uploadImageToBucket } from "../models/User.ts";
+import {
+  fetchUserProfileById,
+  updateProfileData,
+  updateProfilePicture,
+  uploadImageToBucket,
+} from "../models/profile.ts";
 
 export const getPersonalInfo = async (req: AuthRequest, res: Response) => {
   try {
@@ -45,7 +50,6 @@ export const updatePersonalInfo = async (req: AuthRequest, res: Response) => {
       dateHired,
       designation,
     } = req.body;
-
 
     const facultyUpdateData: Record<string, any> = {
       first_name: firstName,
@@ -105,16 +109,15 @@ export const updateProfilePhoto = async (req: AuthRequest, res: Response) => {
 
     return res.status(200).json({
       message: "Profile photo updated successfully",
-      profilePicture: updatedProfile
+      profilePicture: updatedProfile,
     });
-
   } catch (error) {
     console.error("Error updating profile photo:", error);
     return res
       .status(500)
       .json({ error: "An internal server error occurred." });
   }
-}
+};
 
 export const getProfilePhoto = async (req: AuthRequest, res: Response) => {
   try {
@@ -128,12 +131,11 @@ export const getProfilePhoto = async (req: AuthRequest, res: Response) => {
       return res.status(404).json({ error: "Profile photo not found." });
     }
 
-    return res.status(200).json({ photoUrl: userProfile.photoUrl });  
-
+    return res.status(200).json({ photoUrl: userProfile.photoUrl });
   } catch (error) {
     console.error("Error fetching profile photo:", error);
     return res
       .status(500)
       .json({ error: "An internal server error occurred." });
   }
-}
+};

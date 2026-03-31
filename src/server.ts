@@ -8,6 +8,7 @@ import { supabase } from "./config/supabaseClient.ts";
 
 import authRoutes from "./routes/authRoutes.ts";
 import profileRoutes from "./routes/profileRoutes.ts";
+import educationRoutes from "./routes/educationRoutes.ts";
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
@@ -21,6 +22,7 @@ app.use(cookieParser());
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
+app.use("/api/education", educationRoutes);
 
 app.use("/test", (req: Request, res: Response) => {
   res.json({ message: "API is working!" });
