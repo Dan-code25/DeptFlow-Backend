@@ -3,6 +3,7 @@ import { OAuth2Client } from "google-auth-library";
 import jwt from "jsonwebtoken";
 
 import { authenticateUser } from "../models/profile.ts";
+import type { AuthRequest } from "../middleware/authenticate.ts";
 
 const googleClient = new OAuth2Client(
   process.env.GOOGLE_CLIENT_ID,
@@ -72,3 +73,29 @@ export const googleAuth = async (req: Request, res: Response) => {
     res.status(401).json({ error: "Authentication failed" });
   }
 };
+
+export const verifyAuth = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    res.status(200).json({
+      user: req.user,
+      userInfo: { role: req.user.role },
+    });
+  } catch (error) {
+    console.error("Token verification failed:", error);
+    res.status(401).json({ error: "Unauthorized" });
+  }
+};
+
+export const logout = async (req: AuthRequest, res: Response) => {
+  try {
+    res.clearCookie("token", { path: "/" });
+    res.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    console.error("Logout failed:", error);
+    res.status(500).json({ error: "Failed to log out" });
+  }
+}
