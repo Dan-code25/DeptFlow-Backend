@@ -9,20 +9,25 @@ import { supabase } from "./config/supabaseClient.ts";
 import authRoutes from "./routes/authRoutes.ts";
 import profileRoutes from "./routes/profileRoutes.ts";
 import educationRoutes from "./routes/educationRoutes.ts";
+import credentialRoutes from "./routes/credentialRoutes.ts";
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors({ credentials: true, origin: /^http:\/\/localhost:\d{4}$/ }));
-app.use(express.json());
+app.use(express.json({limit: "50mb"}));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Routes
 app.use("/api/auth", authRoutes);
+
 app.use("/api/profile", profileRoutes);
+
 app.use("/api/education", educationRoutes);
+
+app.use("/api/credentials", credentialRoutes);
 
 app.use("/test", (req: Request, res: Response) => {
   res.json({ message: "API is working!" });
