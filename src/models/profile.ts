@@ -1,4 +1,5 @@
 import { supabase } from "../config/supabaseClient.ts";
+import type { Faculty } from "../types/faculty.ts";
 
 export const authenticateUser = async (googleId: string, email: string) => {
   const { data: profile, error: profileError } = await supabase
@@ -158,3 +159,50 @@ export const uploadImageToBucket = async (
 
   return publicUrlData.publicUrl;
 };
+
+export const fetchAllFacultyProfiles = async () => {
+  const { data, error } = await supabase
+    .from("faculty_profiles")
+    .select(
+      `
+      faculty_id,
+      employee_id,
+      first_name,
+      middle_name,
+      last_name,
+      email,
+      contact_number,
+      photo_url,
+      core_group,
+      designation,
+      employee_id,
+      employment_type,
+      date_hired
+     `
+    );
+  
+  if(error) throw error;
+
+  return data;
+}
+
+export const addNewFaculty = async (facultyData: Faculty) => {
+  const { data: newFaculty, error } = await supabase
+    .from("faculty_profiles")
+    .insert([facultyData])
+    .select()
+    .single();
+
+  if (error) throw error;
+  return newFaculty;
+}
+
+export const deleteFaculty = async (facultyId: string) => {
+  const { error } = await supabase
+    .from("faculty_profiles")
+    .delete()
+    .eq("faculty_id", facultyId);
+
+  if (error) throw error;
+  return true;
+}
