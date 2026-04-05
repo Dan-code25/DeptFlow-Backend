@@ -135,6 +135,17 @@ export const updateProfilePicture = async (
   return updatedRecord.photo_url;
 };
 
+export const getProfilePicture = async (facultyId: string) => {
+  const { data, error } = await supabase
+    .from("faculty_profiles")
+    .select("photo_url")
+    .eq("faculty_id", facultyId)
+    .single();
+
+  if (error) throw error;
+  return data.photo_url;
+}
+
 export const uploadImageToBucket = async (
   facultyId: string,
   file: Express.Multer.File,

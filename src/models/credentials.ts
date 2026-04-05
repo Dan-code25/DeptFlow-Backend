@@ -174,3 +174,4 @@ export const deleteWorkExperience = async (facultyId: string, workExperienceId: 
   return { success: true, message: "Work experience deleted successfully." };
 
 }
+
