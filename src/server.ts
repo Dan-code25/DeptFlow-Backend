@@ -13,6 +13,7 @@ import credentialRoutes from "./routes/credentialRoutes.ts";
 import researchRoutes from "./routes/researchRoutes.ts";
 import announcementRoutes from "./routes/announcementRoutes.ts";
 import FacultyRoutes from "./routes/facultyRoutes.ts";
+import analyticsRoutes from "./routes/analyticsRoutes.ts";
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
@@ -37,6 +38,8 @@ app.use("/api/research", researchRoutes);
 app.use("/api/announcements", announcementRoutes);
 
 app.use("/api/faculty-information", FacultyRoutes);
+
+app.use("/api/analytics", analyticsRoutes);
 
 app.use("/test", (req: Request, res: Response) => {
   res.json({ message: "API is working!" });
