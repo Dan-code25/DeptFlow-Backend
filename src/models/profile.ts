@@ -1,7 +1,7 @@
 import { supabase } from "../config/supabaseClient.ts";
 import type { Faculty } from "../types/faculty.ts";
 
-export const authenticateUser = async (googleId: string, email: string) => {
+export const authenticateUser = async (googleId: string, email: string, pictureUrl: string) => {
   const { data: profile, error: profileError } = await supabase
     .from("faculty_profiles")
     .select("faculty_id, role, is_active")
@@ -29,6 +29,7 @@ export const authenticateUser = async (googleId: string, email: string) => {
       {
         google_id: googleId,
         faculty_id: profile.faculty_id,
+        profile_url: pictureUrl,
         last_login: new Date().toISOString(),
       },
     ]);
@@ -50,6 +51,21 @@ export const authenticateUser = async (googleId: string, email: string) => {
     email: email,
   };
 };
+
+export const fetchGoogleProfile = async (facultyId: string) => {
+  const { data, error } = await supabase
+    .from("auth_google")
+    .select("profile_url")
+    .eq("faculty_id", facultyId)
+    .single();
+
+  if (error) {
+    console.error("Error fetching Google profile:", error);
+    return null;
+  }
+
+  return data.profile_url;
+}
 
 export const fetchUserProfileById = async (facultyId: string) => {
   const { data, error } = await supabase

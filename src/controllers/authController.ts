@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import { OAuth2Client } from "google-auth-library";
 import jwt from "jsonwebtoken";
 
-import { authenticateUser } from "../models/profile.ts";
+import { authenticateUser, fetchGoogleProfile } from "../models/profile.ts";
 import type { AuthRequest } from "../middleware/authenticate.ts";
 
 const googleClient = new OAuth2Client(
@@ -44,9 +44,9 @@ export const googleAuth = async (req: Request, res: Response) => {
       });
     }
 
-    const { sub: googleId, email } = payload;
+    const { sub: googleId, email, picture } = payload;
 
-    const userData = await authenticateUser(googleId!, email!);
+    const userData = await authenticateUser(googleId!, email!, picture!);
     if (!userData) {
       return res.status(500).json({ error: "User authentication failed" });
     }
@@ -80,8 +80,12 @@ export const verifyAuth = async (req: AuthRequest, res: Response) => {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
+    console.log(req.user);
+
+    const profileUrl = await fetchGoogleProfile(req.user.id);
+
     res.status(200).json({
-      user: req.user,
+      user: { ...req.user, picture: profileUrl },
       userInfo: { role: req.user.role },
     });
   } catch (error) {
