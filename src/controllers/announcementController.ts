@@ -48,6 +48,8 @@ export const deleteAnnouncement = async (req: AuthRequest & {params: Announcemen
     if (!facultyId) return res.status(401).json({ error: "Unauthorized" });
     const announcementId = req.params.announcementId;
 
+    console.log("announcement ID:", announcementId)
+
     const result = await Announcements.deleteAnnouncement(facultyId, announcementId);
 
     res.status(200).json(result);

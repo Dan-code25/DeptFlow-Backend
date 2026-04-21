@@ -1,5 +1,7 @@
 import { Router } from "express";
 import * as FacultyController from "../controllers/facultyController.ts";
+import * as AvailabilityController from "../controllers/availabilityController.ts";
+import { authenticateToken } from "../middleware/authenticate.ts";
 
 const router = Router();
 
@@ -19,5 +21,10 @@ router.get("/research/faculty/:facultyId", FacultyController.getFacultyResearch)
 router.post("/add-faculty", FacultyController.whitelistFaculty);
 
 router.delete("/delete/:facultyId", FacultyController.deleteFaculty);
+
+router.get(
+  "/availability/faculty/:facultyId", authenticateToken,
+  AvailabilityController.getFacultyAvailability,
+);
 
 export default router;

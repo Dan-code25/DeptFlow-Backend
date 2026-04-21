@@ -72,3 +72,37 @@ export const getMyAvailability = async (req: AuthRequest, res: Response) => {
     return res.status(500).json({ error: "Internal Server Error." });
   }
 };
+
+export const getFacultyAvailability = async (req: AuthRequest & { params: { facultyId: string } }, res: Response) => {
+  try {
+    const facultyId = req.user?.id;
+    const requestedFacultyId = req.params.facultyId;
+
+    if (!facultyId) {
+      return res.status(401).json({ error: "Unauthorized." });
+    }
+
+    const data = await Availability.getAvailabilityByFacultyId(requestedFacultyId);
+
+    if (!data) {
+      return res.status(404).json({ message: "Availability profile not set." });
+    }
+
+    const formattedResponse = {
+      id: `avail-${data.faculty_id.substring(0, 3)}`,
+      subjectIds: data.subject_ids,
+      subjectNames: data.subject_names,
+      dayTimeRanges: data.day_time_ranges,
+      schedulingPriority: data.scheduling_priority,
+      additionalNotes: data.additional_notes,
+      createdAt: data.created_at,
+      updatedAt: data.updated_at,
+    };
+
+    return res.status(200).json(formattedResponse);
+  } catch (error: any) {
+    console.error("Fetch Availability Error:", error.message);
+    return res.status(500).json({ error: "Internal Server Error." });
+  }
+};
+    
