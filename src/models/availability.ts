@@ -1,4 +1,4 @@
-import { supabase } from "../config/supabaseClient.ts";
+import { supabase } from  "../config/supabaseClient.ts";
 
 export const saveAvailability = async (
   facultyId: string,

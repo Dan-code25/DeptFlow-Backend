@@ -14,3 +14,73 @@ export const getSubjects = async (req: AuthRequest, res: Response) => {
   }
 
 }
+
+
+export const getAllSubjects = async (req: AuthRequest, res: Response) => {
+  try {
+    const subjects = await Subjects.fetchAllSubjects();
+    res.status(200).json(subjects);
+  } catch (error) {
+    console.error("Fetching subjects error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getSubjectByCode = async (
+  req: AuthRequest & { params: { subjectCode: string } },
+  res: Response
+) => {
+  try {
+    const { subjectCode } = req.params;
+    const subject = await Subjects.fetchSubjectByCode(subjectCode);
+    res.status(200).json(subject);
+  } catch (error) {
+    console.error("Fetching subject error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const addSubject = async (req: AuthRequest, res: Response) => {
+  try {
+    const subjectData = req.body;
+    const result = await Subjects.createSubject(subjectData);
+    res.status(201).json(result);
+  } catch (error) {
+    console.error("Creating subject error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const editSubject = async (
+  req: AuthRequest & { params: { subjectCode: string } },
+  res: Response
+) => {
+  try {
+    const { subjectCode } = req.params;
+    const subjectData = req.body;
+    const result = await Subjects.updateSubject(subjectCode, subjectData);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Updating subject error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const removeSubject = async (
+  req: AuthRequest & { params: { subjectCode: string } },
+  res: Response
+) => {
+  try {
+    const { subjectCode } = req.params;
+    await Subjects.deleteSubject(subjectCode);
+    res.status(200).json({ message: "Subject deleted successfully" });
+  } catch (error) {
+    console.error("Deleting subject error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+  
+
+
+  
+};
+

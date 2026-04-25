@@ -1,4 +1,4 @@
-import { supabase } from "../config/supabaseClient.ts";
+import { supabase } from  "../config/supabaseClient.ts";
 
 export const countByCoreGroup = async () => {
   const { data, error } = await supabase.from("core_group_counts").select("*");

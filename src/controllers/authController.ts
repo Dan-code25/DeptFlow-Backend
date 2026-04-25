@@ -14,7 +14,9 @@ const googleClientId = process.env.GOOGLE_CLIENT_ID;
 const jwtSecret = process.env.JWT_SECRET;
 
 export const googleAuth = async (req: Request, res: Response) => {
+  console.log("🔵 Google auth endpoint hit");
   const { code } = req.body;
+  console.log("Code received:", code);
 
   try {
     if (!code) {

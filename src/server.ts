@@ -16,6 +16,10 @@ import FacultyRoutes from "./routes/facultyRoutes.ts";
 import analyticsRoutes from "./routes/analyticsRoutes.ts";
 import availabilityRoutes from "./routes/availabilityRoutes.ts";
 import subjectRoutes from "./routes/subjectRoutes.ts";
+import roomRoutes from "./routes/roomRoutes.ts";
+import scheduleRoutes from "./routes/scheduleRoutes.ts";
+import academicPeriodRoutes from "./routes/academicperiodRoutes.ts";    
+import curriculumsRoutes from "./routes/curriculumRoutes.ts";
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
@@ -39,13 +43,21 @@ app.use("/api/research", researchRoutes);
 
 app.use("/api/announcements", announcementRoutes);
 
-app.use("/api/faculty-information", FacultyRoutes);
+app.use("/api/faculty", FacultyRoutes);
 
 app.use("/api/analytics", analyticsRoutes);
 
 app.use("/api/availability", availabilityRoutes);
 
 app.use("/api/subjects", subjectRoutes);
+
+app.use("/api/rooms", roomRoutes);
+
+app.use("/api/schedules", scheduleRoutes);    
+
+app.use("/api/academic-periods", academicPeriodRoutes);
+
+app.use("/api/curriculums", curriculumsRoutes);
 
 // test middleware
 
@@ -61,7 +73,23 @@ try {
 } catch (error) {
   console.error("--Supabase connection failed:", error);
 }
+// ENV validation
+const requiredEnvVars = [
+  "SUPABASE_URL",
+  "SUPABASE_SERVICE_ROLE_KEY",
+  "GOOGLE_CLIENT_ID",
+  "GOOGLE_CLIENT_SECRET",
+  "JWT_SECRET",
+];
 
+const missingEnvVars = requiredEnvVars.filter((key) => !process.env[key]);
+
+if (missingEnvVars.length > 0) {
+  console.error("❌ Missing environment variables:", missingEnvVars.join(", "));
+  process.exit(1); // Stop the server immediately
+} else {
+  console.log("✅ All environment variables loaded");
+}
 
 app.listen(PORT, () => {
   console.log(`[Server] Running on http://localhost:${PORT}`);
