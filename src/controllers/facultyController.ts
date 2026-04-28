@@ -5,7 +5,7 @@ import * as Education from "../models/education.ts";
 import * as Credentials from "../models/credentials.ts";
 import * as Research from "../models/research.ts";
 
-export const getFacultyDashboard = async (req: AuthRequest, res: Response) => {
+export const  getFacultyDashboard = async (req: AuthRequest, res: Response) => {
   try {
     // const facultyId = req.user?.id;
     // if (!facultyId) return res.status(401).json({ error: "Unauthorized" });

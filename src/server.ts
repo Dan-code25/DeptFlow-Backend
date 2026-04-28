@@ -21,6 +21,13 @@ import scheduleRoutes from "./routes/scheduleRoutes.ts";
 import academicPeriodRoutes from "./routes/academicperiodRoutes.ts";    
 import curriculumsRoutes from "./routes/curriculumRoutes.ts";
 
+//Dummy routes for testing
+import curRoutes from "./routes/MangeScheDRoute/CurRoute.ts";
+import facRoutes from "./routes/MangeScheDRoute/FacRoute.ts";
+import romRoutes from "./routes/MangeScheDRoute/RomRoute.ts";
+import schRoutes from "./routes/MangeScheDRoute/SchRoutes.ts";
+import subRoutes from "./routes/MangeScheDRoute/subRoute.ts";
+
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
 
@@ -58,6 +65,16 @@ app.use("/api/schedules", scheduleRoutes);
 app.use("/api/academic-periods", academicPeriodRoutes);
 
 app.use("/api/curriculums", curriculumsRoutes);
+
+
+
+// Dummy routes for testing
+app.use("/api/manage-schedule/curriculums", curRoutes);
+app.use("/api/manage-schedule/faculty", facRoutes);
+app.use("/api/manage-schedule/rooms", romRoutes);
+app.use("/api/manage-schedule/schedules", schRoutes);
+app.use("/api/manage-schedule/subjects", subRoutes);
+
 
 // test middleware
 
