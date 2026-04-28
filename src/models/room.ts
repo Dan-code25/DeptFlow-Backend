@@ -2,7 +2,7 @@ import { supabase } from "../config/supabaseClient.ts";
 
 export const fetchAllRooms = async () => {
   const { data, error } = await supabase
-    .from("rooms")
+    .from("rooms_v2")
     .select(`
       room_id,
       room_no,
@@ -22,7 +22,7 @@ export const fetchAllRooms = async () => {
 
 export const fetchRoomById = async (roomId: number) => {
   const { data, error } = await supabase
-    .from("rooms")
+    .from(" rooms_v2")
     .select(`
       room_id,
       room_no,
@@ -46,7 +46,7 @@ export const createRoom = async (roomData: {
   is_lab: boolean;
 }) => {
   const { data, error } = await supabase
-    .from("rooms")
+    .from("rooms_v2")
     .insert([roomData])
     .select()
     .single();
@@ -60,7 +60,7 @@ export const updateRoom = async (
   roomData: Partial<{ room_no: string; is_lab: boolean }>
 ) => {
   const { data, error } = await supabase
-    .from("rooms")
+    .from("rooms_v2")
     .update(roomData)
     .eq("room_id", roomId)
     .select()
@@ -72,7 +72,7 @@ export const updateRoom = async (
 
 export const deleteRoom = async (roomId: number) => {
   const { error } = await supabase
-    .from("rooms")
+    .from("rooms_v2")
     .delete()
     .eq("room_id", roomId);
 
