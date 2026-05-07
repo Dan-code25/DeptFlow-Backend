@@ -20,7 +20,7 @@ export const getSchedulesByFaculty = async (
   try {
     const { facultyId } = req.params;
     const periodId = req.query.periodId ? Number(req.query.periodId) : undefined;
-    const schedules = await Schedule.fetchSchedulesByFaculty(facultyId, periodId);
+    const schedules = await Schedule.fetchSchedulesByFaculty(facultyId);
     res.status(200).json(schedules);
   } catch (error) {
     console.error("Fetching faculty schedules error:", error);
@@ -34,7 +34,7 @@ export const getMySchedules = async (req: AuthRequest, res: Response) => {
     if (!facultyId) return res.status(401).json({ error: "Unauthorized." });
 
     const periodId = req.query.periodId ? Number(req.query.periodId) : undefined;
-    const schedules = await Schedule.fetchSchedulesByFaculty(facultyId, periodId);
+    const schedules = await Schedule.fetchSchedulesByFaculty(facultyId);
     res.status(200).json(schedules);
   } catch (error) {
     console.error("Fetching my schedules error:", error);
@@ -60,31 +60,39 @@ export const addSchedule = async (req: AuthRequest, res: Response) => {
   try {
     const {
       faculty_id,
+      other_faculty_id, // optional — nullable
       subject_code,
       room_id,        // optional — nullable
+      other_room_id,  // optional — nullable
       period_id,
       day_of_week,
       start_time,
       end_time,
       section,
-      is_ai_generated,
+      status, 
+      school_year, // 👈 Must be destructured here
+      semester
     } = req.body;
 
     // room_id is NOT required — it's nullable
-    if (!faculty_id || !subject_code || !period_id || !day_of_week || !start_time || !end_time || !section) {
+    if (!faculty_id && !other_faculty_id || !subject_code || !period_id || !day_of_week || !start_time || !end_time || !section) {
       return res.status(400).json({ error: "Missing required fields." });
     }
 
     const result = await Schedule.createSchedule({
-      faculty_id,
+      faculty_id : faculty_id || null,  // Convert to number or null
+      other_faculty_id: other_faculty_id || null, // Convert to number or null
       subject_code,
       room_id: room_id ? Number(room_id) : null,   // Convert to number or null
+      other_room_id: other_room_id || null,  // Convert to number or null
       period_id: Number(period_id),
       day_of_week,
       start_time,
       end_time,
       section,
-      is_ai_generated: is_ai_generated ?? false,
+      status, 
+      school_year: school_year || null,
+      semester: semester ? Number(semester) : null
     });
 
     res.status(201).json(result);

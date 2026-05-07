@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import type { AuthRequest } from "../middleware/authenticate.ts";
 import * as Curriculums from "../models/curriculums.ts";
+import { CurriculumModel } from "../models/ManagScheModel/MScurriculum.ts";
 
 export const getAllCurriculums = async (req: AuthRequest, res: Response) => {
   try {
@@ -74,5 +75,27 @@ export const removeCurriculum = async (
   } catch (error: any) {
     console.error("Deleting curriculum error:", error?.message || error);
     res.status(500).json({ error: error?.message || "Internal server error" });
+  }
+};
+
+export const setupCurriculumSections = async (req: Request, res: Response) => {
+  try {
+    const { schoolYear, semester, counts } = req.body;
+
+    // Basic validation
+    if (!schoolYear || !semester || !counts) {
+      return res.status(400).json({ error: "Missing required fields: schoolYear, semester, or counts." });
+    }
+
+    // Pass the schoolYear into our updated model
+    await CurriculumModel.setupSections(schoolYear, semester, counts);
+
+    // Send success response
+    res.status(200).json({ message: "Sections generated successfully!" });
+
+  } catch (error: any) {
+    console.error("Setup Sections Error:", error);
+    const status = error.message === "No valid sections generated from the provided counts." ? 400 : 500;
+    res.status(status).json({ error: error.message || "Failed to setup sections" });
   }
 };

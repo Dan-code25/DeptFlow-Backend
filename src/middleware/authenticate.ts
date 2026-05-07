@@ -12,7 +12,6 @@ export const authenticateToken = (
   next: NextFunction,
 ) => {
   const token = req.cookies.token; // Assuming you made the cookie change!
-
   if (!token) {
     return res
       .status(401)

@@ -20,6 +20,7 @@ import roomRoutes from "./routes/roomRoutes.ts";
 import scheduleRoutes from "./routes/scheduleRoutes.ts";
 import academicPeriodRoutes from "./routes/academicperiodRoutes.ts";    
 import curriculumsRoutes from "./routes/curriculumRoutes.ts";
+import otherRoutes from "./routes/MangeScheDRoute/OthRoute.ts";
 
 //Dummy routes for testing
 import curRoutes from "./routes/MangeScheDRoute/CurRoute.ts";
@@ -30,6 +31,7 @@ import subRoutes from "./routes/MangeScheDRoute/subRoute.ts";
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
+
 
 // Middleware
 app.use(cors({ credentials: true, origin: /^http:\/\/localhost:\d{4}$/ }));
@@ -65,6 +67,8 @@ app.use("/api/schedules", scheduleRoutes);
 app.use("/api/academic-periods", academicPeriodRoutes);
 
 app.use("/api/curriculums", curriculumsRoutes);
+
+app.use("/api/manage-schedule", otherRoutes);
 
 
 

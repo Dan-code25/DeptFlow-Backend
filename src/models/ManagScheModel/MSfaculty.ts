@@ -2,7 +2,7 @@ import { supabase } from "../../config/supabaseClient.ts";
 
 export const getAll = async () => {
   const { data, error } = await supabase
-    .from("faculty")
+    .from("faculty_profiles")
     .select("*");
   if (error) throw error;
   return data;
@@ -10,7 +10,7 @@ export const getAll = async () => {
 
 export const getById = async (id: string) => {
   const { data, error } = await supabase
-    .from("faculty")
+    .from("faculty_profiles")
     .select("*")
     .eq("id", id)
     .single();

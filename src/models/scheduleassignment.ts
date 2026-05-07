@@ -6,13 +6,16 @@ export const fetchAllSchedules = async (periodId?: number) => {
     .select(`
       schedule_id,
       faculty_id,
-      subject_code,
+      other_faculty_id,
+      subject_id,
       room_id,
+      other_room_id,
       period_id,
-      day_of_week,
+      day,
       start_time,
       end_time,
       section,
+      status,
       is_ai_generated,
       created_at,
       faculty_profiles (
@@ -30,59 +33,64 @@ export const fetchAllSchedules = async (periodId?: number) => {
         room_id,
         room_no,
         is_lab
-      ),
-      academic_periods (
-        period_id,
-        semester,
-        academic_year,
-        is_current
       )
     `)
-    .order("day_of_week", { ascending: true });
-
-  if (periodId) {
-    query = query.eq("period_id", periodId);
-  }
-
+    .order("day", { ascending: true });
+ 
   const { data, error } = await query;
-  if (error) throw error;
-
-  return data.map((s: any) => ({
-    id: s.schedule_id,                        // uuid string
-    facultyId: s.faculty_id,                  // uuid string
-    facultyName: `${s.faculty_profiles?.first_name ?? ""} ${s.faculty_profiles?.last_name ?? ""}`.trim(),
-    employmentType: s.faculty_profiles?.employment_type ?? "",
-    subjectCode: s.subject_code,
-    subjectName: s.subjects?.subject_name ?? "",
-    units: s.subjects?.units ?? 0,
-    roomId: s.room_id,                        // uuid string
-    room: s.rooms?.room_no ?? "",
-    isLab: s.rooms?.is_lab ?? false,
-    periodId: s.period_id,                    // int8
-    semester: s.academic_periods?.semester ?? "",
-    academicYear: s.academic_periods?.academic_year ?? "",
-    day: s.day_of_week,
-    startTime: s.start_time,
-    endTime: s.end_time,
-    section: s.section,
-    isAiGenerated: s.is_ai_generated,
-    createdAt: s.created_at,
-  }));
+  
+  console.log("[DEBUG] fetchAllSchedules raw data from Supabase:", JSON.stringify(data, null, 2));
+  
+  if (error) {
+    console.error("[ERROR] fetchAllSchedules error:", error);
+    throw error;
+  }
+ 
+  const mapped = data.map((s: any) => {
+    return {
+      id: s.schedule_id,
+      facultyId: s.faculty_id || s.other_faculty_id,
+      facultyName: s.faculty_profiles 
+        ? `${s.faculty_profiles.first_name ?? ""} ${s.faculty_profiles.last_name ?? ""}`.trim() 
+        : null,
+      employmentType: s.faculty_profiles?.employment_type ?? "",
+      subjectCode: s.subject_id,
+      subjectName: s.subjects?.subject_name ?? "",
+      units: s.subjects?.units ?? 0,
+      roomId: s.room_id || s.other_room_id,
+      room: s.rooms?.room_no ?? null, // Change "TBA" to null
+      isLab: s.rooms?.is_lab ?? false,
+      periodId: s.period_id,
+      day: s.day,
+      startTime: s.start_time,
+      endTime: s.end_time,
+      section: s.section,
+      status: s.status,
+      isAiGenerated: s.is_ai_generated,
+      createdAt: s.created_at,
+      otherFacultyId: s.other_faculty_id,
+      otherRoomId: s.other_room_id,
+      schoolYear: s.school_year, // Ensure these are returned to the frontend
+      semester: s.semester
+    };
+  });
+  
+  return mapped;
 };
+
 
 export const fetchSchedulesByFaculty = async (
   facultyId: string,
-  periodId?: number
 ) => {
   let query = supabase
     .from("schedule_assignments")
     .select(`
       schedule_id,
       faculty_id,
-      subject_code,
+      subject_id,
       room_id,
       period_id,
-      day_of_week,
+      day,
       start_time,
       end_time,
       section,
@@ -106,11 +114,7 @@ export const fetchSchedulesByFaculty = async (
       )
     `)
     .eq("faculty_id", facultyId)
-    .order("day_of_week", { ascending: true });
-
-  if (periodId) {
-    query = query.eq("period_id", periodId);
-  }
+    .order("day", { ascending: true });
 
   const { data, error } = await query;
   if (error) throw error;
@@ -127,7 +131,7 @@ export const fetchSchedulesByFaculty = async (
     periodId: s.period_id,
     semester: s.academic_periods?.semester ?? "",
     academicYear: s.academic_periods?.academic_year ?? "",
-    day: s.day_of_week,
+    day: s.day,
     startTime: s.start_time,
     endTime: s.end_time,
     section: s.section,
@@ -142,16 +146,19 @@ export const fetchScheduleById = async (scheduleId: string) => {  // uuid string
     .select(`
       schedule_id,
       faculty_id,
-      subject_code,
+      other_faculty_id,
+      subject_id,
       room_id,
+      other_room_id,
       period_id,
-      day_of_week,
+      day,
       start_time,
       end_time,
       section,
       is_ai_generated,
       created_at,
       faculty_profiles (
+        faculty_id,
         first_name,
         last_name,
         employment_type
@@ -183,7 +190,7 @@ export const fetchScheduleById = async (scheduleId: string) => {  // uuid string
     facultyId: data.faculty_id,
     facultyName: `${(data as any).faculty_profiles?.first_name ?? ""} ${(data as any).faculty_profiles?.last_name ?? ""}`.trim(),
     employmentType: (data as any).faculty_profiles?.employment_type ?? "",
-    subjectCode: data.subject_code,
+    subjectCode: data.subject_id,
     subjectName: (data as any).subjects?.subject_name ?? "",
     units: (data as any).subjects?.units ?? 0,
     roomId: data.room_id,
@@ -192,7 +199,7 @@ export const fetchScheduleById = async (scheduleId: string) => {  // uuid string
     periodId: data.period_id,
     semester: (data as any).academic_periods?.semester ?? "",
     academicYear: (data as any).academic_periods?.academic_year ?? "",
-    day: data.day_of_week,
+    day: data.day,
     startTime: data.start_time,
     endTime: data.end_time,
     section: data.section,
@@ -201,42 +208,38 @@ export const fetchScheduleById = async (scheduleId: string) => {  // uuid string
   };
 };
 
-export const createSchedule = async (scheduleData: {
-  faculty_id: string;    // uuid
-  subject_code: string;  // text
-  room_id: number | null;       // ← int8 or null (optional)
-  period_id: number;     // int8
-  day_of_week: string;
-  start_time: string;
-  end_time: string;
-  section: string;
-  is_ai_generated?: boolean;
-}) => {
+export const createSchedule = async (scheduleData: any) => {
+  console.log("TRACE [Model - Input Data]:", scheduleData);
   const { data, error } = await supabase
     .from("schedule_assignments")
-    .insert([{
-      ...scheduleData,
-      is_ai_generated: scheduleData.is_ai_generated ?? false,
-    }])
-    .select()
+    .insert([scheduleData])
+    .select('*')
     .single();
 
-  if (error) throw error;
+  if (error) {
+    console.error("Supabase Error:", error);
+    throw error;
+  }
+  console.log("TRACE [Model - DB Return]:", data);
+  
   return data;
 };
 
 export const updateSchedule = async (
-  scheduleId: string,       // uuid
-  scheduleData: Partial<{
-    faculty_id: string;
-    subject_code: string;
-    room_id: number | null;
+    scheduleId: string,       // uuid
+    scheduleData: Partial<{
+    faculty_id: string | null;
+    other_faculty_id: string | null; // uuid, optional
+    subject_id: string;
+    room_id: string | null;
+    other_room_id: string | null; // uuid, optional
     period_id: number;
-    day_of_week: string;
+    day: string;
     start_time: string;
     end_time: string;
     section: string;
-    is_ai_generated: boolean;
+    school_year: string | null;
+    semester: number | null;
   }>
 ) => {
   const { data, error } = await supabase

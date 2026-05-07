@@ -1,7 +1,7 @@
 import { Router } from "express";
 import * as scheduleController from "../controllers/schedulecontroller.ts";
 import { authenticateToken } from "../middleware/authenticate.ts";
- 
+
 const router = Router();
 
 // More specific routes FIRST
@@ -25,6 +25,8 @@ router.post("/", authenticateToken, scheduleController.addSchedule);
 router.patch("/:scheduleId", authenticateToken, scheduleController.editSchedule);
 router.delete("/:scheduleId", authenticateToken, scheduleController.removeSchedule);
 
+router.post("/", authenticateToken, scheduleController.addSchedule);
+router.patch("/:scheduleId", authenticateToken, scheduleController.editSchedule);
 
 export default router;
  

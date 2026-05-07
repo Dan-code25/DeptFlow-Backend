@@ -1,16 +1,30 @@
 import { supabase } from "../../config/supabaseClient.ts";
 
 export const ScheduleModel = {
-  getAll: async () => {
+  getAll: async (schoolYear?: string, sem?: string) => {
+    
+    // 1. Build a dynamic filter object
+    const filters: Record<string, any> = {};
+    
+    if (schoolYear) {
+      filters.school_year = schoolYear;
+    }
+    
+    if (sem) {
+      filters.semester = Number(sem);
+    }
+    
     const { data, error } = await supabase
       .from("schedule_assignments")
-      .select("*");
+      .select("*")
+      .match(filters);
+    
     if (error) throw error;
     return data;
   },
 
   create: async (entry: {
-    id: string;
+    schedule_id: string;
     faculty_id: string;
     subject_id: string;
     room_id: string;
@@ -39,17 +53,17 @@ export const ScheduleModel = {
     start_time: string;
     end_time: string;
     section: string;
-    status: "draft" | "finalized";
+    status: "draft" | "finalized" | "published";
     session_group_id: string;
     session_hours: number;
   }>) => {
     const { data, error } = await supabase
       .from("schedule_assignments")   // ✅ fixed dash → underscore
       .update(fields)
-      .eq("id", id)
+      .eq("schedule_id", id)
       .select()
-      .single();
     if (error) throw error;
+    console.log(`[MSschedule] update result for ${id}:`, data);
     return data;
   },
 
@@ -57,7 +71,7 @@ export const ScheduleModel = {
     const { error } = await supabase
       .from("schedule_assignments")
       .delete()
-      .eq("id", id);
+      .eq("schedule_id", id);
     if (error) throw error;
   },
 };

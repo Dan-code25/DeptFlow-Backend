@@ -7,6 +7,7 @@ const router = Router();
 router.get("/", authenticateToken, SchedController.getAllSchedules);
 router.post("/", authenticateToken, SchedController.createSchedule);
 router.put("/:id", authenticateToken, SchedController.updateSchedule);
+router.patch("/:id", authenticateToken, SchedController.updateSchedule);
 router.delete("/:id", authenticateToken, SchedController.deleteSchedule);
 
 export default router;
