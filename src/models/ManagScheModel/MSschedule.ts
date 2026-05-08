@@ -25,14 +25,16 @@ export const ScheduleModel = {
 
   create: async (entry: {
     schedule_id: string;
-    faculty_id: string;
+    faculty_id?: string | null;
+    other_faculty_id?: string;
     subject_id: string;
-    room_id: string;
+    room_id?: string | null;
+    other_room_id?: string | null;
     day: string;
     start_time: string;
     end_time: string;
     section: string;
-    status: "draft" | "finalized";
+    status: "draft" | "finalized" | "published";
     session_group_id?: string;
     session_hours?: number;
   }) => {
@@ -46,9 +48,11 @@ export const ScheduleModel = {
   },
 
   update: async (id: string, fields: Partial<{
-    faculty_id: string;
+    faculty_id?: string | null;
+    other_faculty_id?: string | null;
     subject_id: string;
-    room_id: string;
+    room_id?: string | null;
+    other_room_id?: string | null;
     day: string;
     start_time: string;
     end_time: string;
