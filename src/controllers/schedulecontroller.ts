@@ -23,9 +23,6 @@ export const getSchedulesByFaculty = async (
     const facultyId = req.user?.id;
     if (!facultyId) return res.status(401).json({ error: "Unauthorized." });
 
-    const periodId = req.query.periodId
-      ? Number(req.query.periodId)
-      : undefined;
     const schedules = await Schedule.fetchSchedulesByFaculty(facultyId);
     res.status(200).json(schedules);
   } catch (error) {
@@ -55,9 +52,6 @@ export const getMySchedules = async (req: AuthRequest, res: Response) => {
     const facultyId = req.user?.id;
     if (!facultyId) return res.status(401).json({ error: "Unauthorized." });
 
-    const periodId = req.query.periodId
-      ? Number(req.query.periodId)
-      : undefined;
     const schedules = await Schedule.fetchSchedulesByFaculty(facultyId);
     res.status(200).json(schedules);
   } catch (error) {

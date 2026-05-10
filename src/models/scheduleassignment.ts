@@ -11,7 +11,6 @@ export const fetchAllSchedules = async (periodId?: number) => {
       subject_id,
       room_id,
       other_room_id,
-      period_id,
       day,
       start_time,
       end_time,
@@ -32,8 +31,9 @@ export const fetchAllSchedules = async (periodId?: number) => {
       ),
       rooms (
         room_id,
-        room_no,
-        is_lab
+        room_room,
+        room_type,
+        room_capacity
       )
     `,
     )
@@ -63,9 +63,8 @@ export const fetchAllSchedules = async (periodId?: number) => {
       subjectName: s.subjects?.subject_name ?? "",
       units: s.subjects?.units ?? 0,
       roomId: s.room_id || s.other_room_id,
-      room: s.rooms?.room_no ?? null, // Change "TBA" to null
+      room: s.rooms?.room_room ?? null, // Change "TBA" to null
       isLab: s.rooms?.is_lab ?? false,
-      periodId: s.period_id,
       day: s.day,
       startTime: s.start_time,
       endTime: s.end_time,
@@ -106,8 +105,9 @@ export const fetchSchedulesByFaculty = async (facultyId: string) => {
       ),
       rooms (
         room_id,
-        room_no,
-        is_lab
+        room_room,
+        room_type,
+        room_capacity
       ),
       academic_periods (
         period_id,
@@ -130,9 +130,7 @@ export const fetchSchedulesByFaculty = async (facultyId: string) => {
     subjectName: s.subjects?.subject_name ?? "",
     units: s.subjects?.units ?? 0,
     roomId: s.room_id,
-    room: s.rooms?.room_no ?? "",
-    isLab: s.rooms?.is_lab ?? false,
-    periodId: s.period_id,
+    room: s.rooms?.room_room ?? "",
     semester: s.academic_periods?.semester ?? "",
     academicYear: s.academic_periods?.academic_year ?? "",
     day: s.day,
@@ -176,8 +174,9 @@ export const fetchScheduleById = async (scheduleId: string) => {
       ),
       rooms (
         room_id,
-        room_no,
-        is_lab
+        room_room,
+        room_type,
+        room_capacity
       ),
       academic_periods (
         period_id,
@@ -202,9 +201,7 @@ export const fetchScheduleById = async (scheduleId: string) => {
     subjectName: (data as any).subjects?.subject_name ?? "",
     units: (data as any).subjects?.units ?? 0,
     roomId: data.room_id,
-    room: (data as any).rooms?.room_no ?? "",
-    isLab: (data as any).rooms?.is_lab ?? false,
-    periodId: data.period_id,
+    room: (data as any).rooms?.room_room ?? "",
     semester: (data as any).academic_periods?.semester ?? "",
     academicYear: (data as any).academic_periods?.academic_year ?? "",
     day: data.day,
