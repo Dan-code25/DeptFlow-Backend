@@ -3,7 +3,8 @@ import { supabase } from "../config/supabaseClient.ts";
 export const fetchAllSchedules = async (periodId?: number) => {
   let query = supabase
     .from("schedule_assignments")
-    .select(`
+    .select(
+      `
       schedule_id,
       faculty_id,
       other_faculty_id,
@@ -34,24 +35,28 @@ export const fetchAllSchedules = async (periodId?: number) => {
         room_no,
         is_lab
       )
-    `)
+    `,
+    )
     .order("day", { ascending: true });
- 
+
   const { data, error } = await query;
-  
-  console.log("[DEBUG] fetchAllSchedules raw data from Supabase:", JSON.stringify(data, null, 2));
-  
+
+  console.log(
+    "[DEBUG] fetchAllSchedules raw data from Supabase:",
+    JSON.stringify(data, null, 2),
+  );
+
   if (error) {
     console.error("[ERROR] fetchAllSchedules error:", error);
     throw error;
   }
- 
+
   const mapped = data.map((s: any) => {
     return {
       id: s.schedule_id,
       facultyId: s.faculty_id || s.other_faculty_id,
-      facultyName: s.faculty_profiles 
-        ? `${s.faculty_profiles.first_name ?? ""} ${s.faculty_profiles.last_name ?? ""}`.trim() 
+      facultyName: s.faculty_profiles
+        ? `${s.faculty_profiles.first_name ?? ""} ${s.faculty_profiles.last_name ?? ""}`.trim()
         : null,
       employmentType: s.faculty_profiles?.employment_type ?? "",
       subjectCode: s.subject_id,
@@ -71,20 +76,18 @@ export const fetchAllSchedules = async (periodId?: number) => {
       otherFacultyId: s.other_faculty_id,
       otherRoomId: s.other_room_id,
       schoolYear: s.school_year, // Ensure these are returned to the frontend
-      semester: s.semester
+      semester: s.semester,
     };
   });
-  
+
   return mapped;
 };
 
-
-export const fetchSchedulesByFaculty = async (
-  facultyId: string,
-) => {
+export const fetchSchedulesByFaculty = async (facultyId: string) => {
   let query = supabase
     .from("schedule_assignments")
-    .select(`
+    .select(
+      `
       schedule_id,
       faculty_id,
       subject_id,
@@ -112,7 +115,8 @@ export const fetchSchedulesByFaculty = async (
         academic_year,
         is_current
       )
-    `)
+    `,
+    )
     .eq("faculty_id", facultyId)
     .order("day", { ascending: true });
 
@@ -140,10 +144,12 @@ export const fetchSchedulesByFaculty = async (
   }));
 };
 
-export const fetchScheduleById = async (scheduleId: string) => {  // uuid string
+export const fetchScheduleById = async (scheduleId: string) => {
+  // uuid string
   const { data, error } = await supabase
     .from("schedule_assignments")
-    .select(`
+    .select(
+      `
       schedule_id,
       faculty_id,
       other_faculty_id,
@@ -179,7 +185,8 @@ export const fetchScheduleById = async (scheduleId: string) => {  // uuid string
         academic_year,
         is_current
       )
-    `)
+    `,
+    )
     .eq("schedule_id", scheduleId)
     .single();
 
@@ -188,7 +195,8 @@ export const fetchScheduleById = async (scheduleId: string) => {  // uuid string
   return {
     id: data.schedule_id,
     facultyId: data.faculty_id,
-    facultyName: `${(data as any).faculty_profiles?.first_name ?? ""} ${(data as any).faculty_profiles?.last_name ?? ""}`.trim(),
+    facultyName:
+      `${(data as any).faculty_profiles?.first_name ?? ""} ${(data as any).faculty_profiles?.last_name ?? ""}`.trim(),
     employmentType: (data as any).faculty_profiles?.employment_type ?? "",
     subjectCode: data.subject_id,
     subjectName: (data as any).subjects?.subject_name ?? "",
@@ -213,7 +221,7 @@ export const createSchedule = async (scheduleData: any) => {
   const { data, error } = await supabase
     .from("schedule_assignments")
     .insert([scheduleData])
-    .select('*')
+    .select("*")
     .single();
 
   if (error) {
@@ -221,13 +229,13 @@ export const createSchedule = async (scheduleData: any) => {
     throw error;
   }
   console.log("TRACE [Model - DB Return]:", data);
-  
+
   return data;
 };
 
 export const updateSchedule = async (
-    scheduleId: string,       // uuid
-    scheduleData: Partial<{
+  scheduleId: string, // uuid
+  scheduleData: Partial<{
     faculty_id: string | null;
     other_faculty_id: string | null; // uuid, optional
     subject_id: string;
@@ -240,7 +248,7 @@ export const updateSchedule = async (
     section: string;
     school_year: string | null;
     semester: number | null;
-  }>
+  }>,
 ) => {
   const { data, error } = await supabase
     .from("schedule_assignments")
@@ -253,7 +261,8 @@ export const updateSchedule = async (
   return data;
 };
 
-export const deleteSchedule = async (scheduleId: string) => {  // uuid
+export const deleteSchedule = async (scheduleId: string) => {
+  // uuid
   const { error } = await supabase
     .from("schedule_assignments")
     .delete()
@@ -323,4 +332,42 @@ export const fetchGeminiScheduleContext = async (periodId?: number) => {
   }));
 
   return { faculty, subjects, schedules: geminiSchedules };
+};
+
+export const fetchFacultyScheduleById = async (facultyId: string) => {
+  const { data, error } = await supabase
+    .from("schedule_assignments")
+    .select(
+      `
+      subject_id,
+      section,
+      day,
+      start_time,
+      end_time,
+      room_id,
+      subjects (
+        subject_code,
+        subject_name,
+        units
+      ),
+      rooms (
+        room
+      )
+    `,
+    )
+    .eq("faculty_id", facultyId)
+    .order("day", { ascending: true });
+
+  if (error) throw error;
+
+  return data.map((s: any) => ({
+    subjectCode: s.subjects?.subject_code ?? "",
+    subjectName: s.subjects?.subject_name ?? "",
+    section: s.section,
+    units: s.subjects?.units ?? 0,
+    day: s.day,
+    startTime: s.start_time,
+    endTime: s.end_time,
+    room: s.rooms?.room ?? "TBA",
+  }));
 };

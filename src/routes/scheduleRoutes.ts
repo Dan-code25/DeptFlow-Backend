@@ -14,6 +14,8 @@ router.get("/my", authenticateToken, scheduleController.getMySchedules);
 // By faculty id
 router.get("/faculty/:facultyId", authenticateToken, scheduleController.getSchedulesByFaculty);
 
+router.get("/my-schedule", authenticateToken, scheduleController.getFacultyScheduleById);
+
 // Then generic routes
 // Admin — all schedules (optional ?periodId query param)
 router.get("/", authenticateToken, scheduleController.getAllSchedules);
