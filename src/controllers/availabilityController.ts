@@ -11,22 +11,25 @@ export const saveAvailability = async (req: AuthRequest, res: Response) => {
       return;
     }
 
-    const availabilityData = req.body;
+    const prefData = req.body;
 
     const result = await Availability.saveAvailability(
-      facultyId!,
-      availabilityData,
+      facultyId,
+      prefData,
     );
 
     const formattedResult = {
-      id: result.faculty_id,
-      subjectIds: result.subject_ids,
-      subjectNames: result.subject_names,
-      dayTimeRanges: result.day_time_ranges,
-      schedulingPriority: result.scheduling_priority,
-      additionalNotes: result.additional_notes,
-      createdAt: result.created_at,
-      updatedAt: result.updated_at,
+      facultyId: result.faculty_id,
+      priority: result.priority,
+      maxClassesPerDay: result.max_classes_per_day,
+      maxConsecutiveHours: result.max_consecutive_hours,
+      timeStart: result.time_start,
+      timeEnd: result.time_end,
+      preferredDays: result.preferred_days,
+      unavailableDays: result.unavailable_days,
+      preferredRoomTypes: result.preferred_room_types,
+      unavailableTimeSlots: result.unavailable_time_slots,
+      subjectSpecializations: result.subject_specializations
     };
 
     res
@@ -56,14 +59,17 @@ export const getMyAvailability = async (req: AuthRequest, res: Response) => {
     }
 
     const formattedResponse = {
-      id: `avail-${data.faculty_id.substring(0, 3)}`,
-      subjectIds: data.subject_ids,
-      subjectNames: data.subject_names,
-      dayTimeRanges: data.day_time_ranges,
-      schedulingPriority: data.scheduling_priority,
-      additionalNotes: data.additional_notes,
-      createdAt: data.created_at,
-      updatedAt: data.updated_at,
+      facultyId: data.faculty_id,
+      priority: data.priority,
+      maxClassesPerDay: data.max_classes_per_day,
+      maxConsecutiveHours: data.max_consecutive_hours,
+      timeStart: data.time_start,
+      timeEnd: data.time_end,
+      preferredDays: data.preferred_days,
+      unavailableDays: data.unavailable_days,
+      preferredRoomTypes: data.preferred_room_types,
+      unavailableTimeSlots: data.unavailable_time_slots,
+      subjectSpecializations: data.subject_specializations
     };
 
     return res.status(200).json(formattedResponse);
@@ -89,14 +95,17 @@ export const getFacultyAvailability = async (req: AuthRequest & { params: { facu
     }
 
     const formattedResponse = {
-      id: `avail-${data.faculty_id.substring(0, 3)}`,
-      subjectIds: data.subject_ids,
-      subjectNames: data.subject_names,
-      dayTimeRanges: data.day_time_ranges,
-      schedulingPriority: data.scheduling_priority,
-      additionalNotes: data.additional_notes,
-      createdAt: data.created_at,
-      updatedAt: data.updated_at,
+      facultyId: data.faculty_id,
+      priority: data.priority,
+      maxClassesPerDay: data.max_classes_per_day,
+      maxConsecutiveHours: data.max_consecutive_hours,
+      timeStart: data.time_start,
+      timeEnd: data.time_end,
+      preferredDays: data.preferred_days,
+      unavailableDays: data.unavailable_days,
+      preferredRoomTypes: data.preferred_room_types,
+      unavailableTimeSlots: data.unavailable_time_slots,
+      subjectSpecializations: data.subject_specializations
     };
 
     return res.status(200).json(formattedResponse);

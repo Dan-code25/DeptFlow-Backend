@@ -3,7 +3,7 @@ import { supabase } from "../../config/supabaseClient.ts";
 export const getAll = async () => {
   const { data, error } = await supabase
     .from("faculty_profiles")
-    .select("*");
+    .select("*, faculty_preferences(*)");
   if (error) throw error;
   return data;
 };
