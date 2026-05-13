@@ -12,22 +12,21 @@ export const fetchSubjects = async () => {
 export const fetchAllSubjects = async () => {
   const { data, error } = await supabase
     .from("subjects")
-    .select(`
+    .select(
+      `
       subject_code,
       subject_name,
-      units,
-      created_at
-    `)
+      units
+      `
+    )
+    .or(
+      "subject_code.like.CS%,subject_code.like.CC%,subject_code.like.IS%,subject_code.like.IT%"
+    )
     .order("subject_code", { ascending: true });
 
   if (error) throw error;
 
-  return data.map((s) => ({
-    code: s.subject_code,
-    name: s.subject_name,
-    units: s.units,
-    createdAt: s.created_at,
-  }));
+  return [...data];
 };
 
 export const fetchSubjectByCode = async (subjectCode: string) => {
