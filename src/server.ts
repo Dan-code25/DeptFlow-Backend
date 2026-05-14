@@ -38,7 +38,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://your-future-frontend-url.vercel.app",
+      "https://depflow.vercel.app",
+      "depflow-ellm8smwa-dan-code25s-projects.vercel.app",
     ],
     credentials: true,
   }),
