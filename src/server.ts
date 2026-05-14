@@ -39,7 +39,7 @@ app.use(
     origin: [
       "http://localhost:5173",
       "https://depflow.vercel.app",
-      "depflow-ellm8smwa-dan-code25s-projects.vercel.app",
+      "https://depflow-ellm8smwa-dan-code25s-projects.vercel.app",
     ],
     credentials: true,
   }),
