@@ -66,9 +66,12 @@ export const googleAuth = async (req: Request, res: Response) => {
 
     res.cookie("token", jwtToken, {
       httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       path: "/",
+      secure: true,     
+      sameSite: "none",  
     });
+
     res.status(200).json({ user: payload, userInfo: userData });
   } catch (error) {
     console.error("Google authentication failed:", error);
@@ -98,7 +101,11 @@ export const verifyAuth = async (req: AuthRequest, res: Response) => {
 
 export const logout = async (req: AuthRequest, res: Response) => {
   try {
-    res.clearCookie("token", { path: "/" });
+    res.clearCookie("token", {
+      path: "/",
+      secure: true, 
+      sameSite: "none", 
+    });
     res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
     console.error("Logout failed:", error);
