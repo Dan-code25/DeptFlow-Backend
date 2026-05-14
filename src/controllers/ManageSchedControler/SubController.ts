@@ -1,6 +1,6 @@
 import type { Response } from "express";
-import type { AuthRequest } from "../../middleware/authenticate.ts";
-import { SubjectModel } from "../../models/ManagScheModel/MSsubject.ts";
+import type { AuthRequest } from "../../middleware/authenticate.js";
+import { SubjectModel } from "../../models/ManagScheModel/MSsubject.js";
 
 export const getAllSubjects = async (req: AuthRequest, res: Response) => {
   try {

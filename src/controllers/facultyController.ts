@@ -1,9 +1,9 @@
 import type { Request, Response } from "express";
-import type { AuthRequest } from "../middleware/authenticate.ts";
-import * as Faculty from "../models/profile.ts";
-import * as Education from "../models/education.ts";
-import * as Credentials from "../models/credentials.ts";
-import * as Research from "../models/research.ts";
+import type { AuthRequest } from "../middleware/authenticate.js";
+import * as Faculty from "../models/profile.js";
+import * as Education from "../models/education.js";
+import * as Credentials from "../models/credentials.js";
+import * as Research from "../models/research.js";
 
 export const  getFacultyDashboard = async (req: AuthRequest, res: Response) => {
   try {

@@ -1,6 +1,6 @@
 import type { Response } from "express";
-import type { AuthRequest } from "../middleware/authenticate.ts";
-import * as Room from "../models/room.ts";
+import type { AuthRequest } from "../middleware/authenticate.js";
+import * as Room from "../models/room.js";
 
 export const getAllRooms = async (req: AuthRequest, res: Response) => {
   try {

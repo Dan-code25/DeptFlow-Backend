@@ -1,6 +1,6 @@
 import { Router } from "express";
-import * as SubController from "../../controllers/ManageSchedControler/SubController.ts";
-import { authenticateToken } from "../../middleware/authenticate.ts";
+import * as SubController from "../../controllers/ManageSchedControler/SubController.js";
+import { authenticateToken } from "../../middleware/authenticate.js";
 
 const router = Router();
 

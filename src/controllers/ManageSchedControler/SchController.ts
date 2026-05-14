@@ -1,6 +1,6 @@
 import type { Response } from "express";
-import type { AuthRequest } from "../../middleware/authenticate.ts";
-import { ScheduleModel } from "../../models/ManagScheModel/MSschedule.ts";
+import type { AuthRequest } from "../../middleware/authenticate.js";
+import { ScheduleModel } from "../../models/ManagScheModel/MSschedule.js";
 
 export const getAllSchedules = async (req: AuthRequest, res: Response) => {
   try {

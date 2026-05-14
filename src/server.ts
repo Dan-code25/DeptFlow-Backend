@@ -4,30 +4,30 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import type { Express, Request, Response, NextFunction } from "express";
 
-import { supabase } from "./config/supabaseClient.ts";
+import { supabase } from "./config/supabaseClient.js";
 
-import authRoutes from "./routes/authRoutes.ts";
-import profileRoutes from "./routes/profileRoutes.ts";
-import educationRoutes from "./routes/educationRoutes.ts";
-import credentialRoutes from "./routes/credentialRoutes.ts";
-import researchRoutes from "./routes/researchRoutes.ts";
-import announcementRoutes from "./routes/announcementRoutes.ts";
-import FacultyRoutes from "./routes/facultyRoutes.ts";
-import analyticsRoutes from "./routes/analyticsRoutes.ts";
-import availabilityRoutes from "./routes/availabilityRoutes.ts";
-import subjectRoutes from "./routes/subjectRoutes.ts";
-import roomRoutes from "./routes/roomRoutes.ts";
-import scheduleRoutes from "./routes/scheduleRoutes.ts";
-import academicPeriodRoutes from "./routes/academicperiodRoutes.ts";    
-import curriculumsRoutes from "./routes/curriculumRoutes.ts";
-import otherRoutes from "./routes/MangeScheDRoute/OthRoute.ts";
+import authRoutes from "./routes/authRoutes.js";
+import profileRoutes from "./routes/profileRoutes.js";
+import educationRoutes from "./routes/educationRoutes.js";
+import credentialRoutes from "./routes/credentialRoutes.js";
+import researchRoutes from "./routes/researchRoutes.js";
+import announcementRoutes from "./routes/announcementRoutes.js";
+import FacultyRoutes from "./routes/facultyRoutes.js";
+import analyticsRoutes from "./routes/analyticsRoutes.js";
+import availabilityRoutes from "./routes/availabilityRoutes.js";
+import subjectRoutes from "./routes/subjectRoutes.js";
+import roomRoutes from "./routes/roomRoutes.js";
+import scheduleRoutes from "./routes/scheduleRoutes.js";
+import academicPeriodRoutes from "./routes/academicperiodRoutes.js";    
+import curriculumsRoutes from "./routes/curriculumRoutes.js";
+import otherRoutes from "./routes/MangeScheDRoute/OthRoute.js";
 
 //Dummy routes for testing
-import curRoutes from "./routes/MangeScheDRoute/CurRoute.ts";
-import facRoutes from "./routes/MangeScheDRoute/FacRoute.ts";
-import romRoutes from "./routes/MangeScheDRoute/RomRoute.ts";
-import schRoutes from "./routes/MangeScheDRoute/SchRoutes.ts";
-import subRoutes from "./routes/MangeScheDRoute/subRoute.ts";
+import curRoutes from "./routes/MangeScheDRoute/CurRoute.js";
+import facRoutes from "./routes/MangeScheDRoute/FacRoute.js";
+import romRoutes from "./routes/MangeScheDRoute/RomRoute.js";
+import schRoutes from "./routes/MangeScheDRoute/SchRoutes.js";
+import subRoutes from "./routes/MangeScheDRoute/subRoute.js";
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;

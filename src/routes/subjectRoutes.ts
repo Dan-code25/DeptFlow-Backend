@@ -1,6 +1,6 @@
 import { Router } from "express";
-import * as SubjectsController from "../controllers/subjectsController.ts";
-import { authenticateToken } from "../middleware/authenticate.ts";
+import * as SubjectsController from "../controllers/subjectsController.js";
+import { authenticateToken } from "../middleware/authenticate.js";
 
 const router = Router();
 

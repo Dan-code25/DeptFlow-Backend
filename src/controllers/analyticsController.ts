@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import type { AuthRequest } from "../middleware/authenticate.ts";
-import * as Analytics from "../models/analytics.ts";
+import type { AuthRequest } from "../middleware/authenticate.js";
+import * as Analytics from "../models/analytics.js";
 
 
 export const getCoreGroupsDistribution = async (req: AuthRequest, res: Response) => {
@@ -58,7 +58,7 @@ export const fetchRoomUtilization = async (req: AuthRequest, res: Response) => {
 
     const roomUtilizationData = await Analytics.getRoomUtilization();
     res.status(200).json(roomUtilizationData);
-    
+
   } catch (error) {
     console.log("Fetching Analytics error:", error);
     res.status(500).json({ error: "Failed to fetch analytics data." });

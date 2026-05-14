@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import jwt, { type VerifyErrors } from "jsonwebtoken"; // Import VerifyErrors here
-import type { DecodedToken } from "../types/auth.ts";
+import type { DecodedToken } from "../types/auth.js";
 
 export interface AuthRequest extends Request {
   user?: DecodedToken;

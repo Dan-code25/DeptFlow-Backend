@@ -1,6 +1,6 @@
 import type { RequestHandler } from "express";
-import { OtherFacultyModel, OtherRoomModel } from "../../models/ManagScheModel/MSother.ts";
-import { supabase } from "../../config/supabaseClient.ts";
+import { OtherFacultyModel, OtherRoomModel } from "../../models/ManagScheModel/MSother.js";
+import { supabase } from "../../config/supabaseClient.js";
 
 export const createOtherFaculty: RequestHandler = async (req, res) => {
   try {

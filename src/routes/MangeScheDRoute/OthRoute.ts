@@ -1,5 +1,5 @@
 import express from "express";
-import { createOtherFaculty, createOtherRoom, getOtherFaculty, getOtherRooms} from "../../controllers/ManageSchedControler/OthController.ts";
+import { createOtherFaculty, createOtherRoom, getOtherFaculty, getOtherRooms} from "../../controllers/ManageSchedControler/OthController.js";
 
 const router = express.Router();
 

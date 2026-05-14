@@ -2,8 +2,8 @@ import type { Request, Response } from "express";
 import { OAuth2Client } from "google-auth-library";
 import jwt from "jsonwebtoken";
 
-import { authenticateUser, fetchGoogleProfile } from "../models/profile.ts";
-import type { AuthRequest } from "../middleware/authenticate.ts";
+import { authenticateUser, fetchGoogleProfile } from "../models/profile.js";
+import type { AuthRequest } from "../middleware/authenticate.js";
 
 const googleClient = new OAuth2Client(
   process.env.GOOGLE_CLIENT_ID,

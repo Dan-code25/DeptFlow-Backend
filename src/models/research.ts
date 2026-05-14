@@ -1,4 +1,4 @@
-import { supabase } from "../config/supabaseClient.ts";
+import { supabase } from "../config/supabaseClient.js";
 
 export const fetchAllResearch = async (facultyId: string) => {
   const { data, error } = await supabase

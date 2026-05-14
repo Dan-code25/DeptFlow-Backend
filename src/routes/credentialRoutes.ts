@@ -1,7 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
-import * as credentialController from "../controllers/credentialController.ts";
-import { authenticateToken } from "../middleware/authenticate.ts";
+import * as credentialController from "../controllers/credentialController.js";
+import { authenticateToken } from "../middleware/authenticate.js";
   
 const router = Router();
 

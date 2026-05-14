@@ -1,6 +1,6 @@
 import { Router } from "express";
-import * as educationController from "../controllers/educationController.ts";
-import { authenticateToken } from "../middleware/authenticate.ts";
+import * as educationController from "../controllers/educationController.js";
+import { authenticateToken } from "../middleware/authenticate.js";
 
 const router = Router();
 

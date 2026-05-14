@@ -1,4 +1,4 @@
-import { supabase } from "../config/supabaseClient.ts";
+import { supabase } from "../config/supabaseClient.js";
 import type { Faculty } from "../types/faculty.ts";
 
 export const authenticateUser = async (googleId: string, email: string, pictureUrl: string) => {

@@ -1,4 +1,4 @@
-import { supabase } from "../config/supabaseClient.ts";
+import { supabase } from "../config/supabaseClient.js";
 import type { Education } from "../types/educ.ts";
 
 export const addEducation = async (facultyId: string, educationData: Education) => {

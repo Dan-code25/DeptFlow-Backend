@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import type { AuthRequest } from "../middleware/authenticate.ts";
-import * as Announcements from "../models/announcement.ts";
+import type { AuthRequest } from "../middleware/authenticate.js";
+import * as Announcements from "../models/announcement.js";
 
 type Params <T extends string> = {
   [K in T]: string;

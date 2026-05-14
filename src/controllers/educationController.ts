@@ -1,6 +1,6 @@
 import type { Response, Request } from "express";
-import type { AuthRequest } from "../middleware/authenticate.ts";
-import * as Education from "../models/education.ts";
+import type { AuthRequest } from "../middleware/authenticate.js";
+import * as Education from "../models/education.js";
 
 
 export const addEducation = async (req: AuthRequest, res: Response) => {

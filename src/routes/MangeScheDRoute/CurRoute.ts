@@ -1,7 +1,7 @@
 import { Router } from "express";
-import * as CurriculumController from "../../controllers/ManageSchedControler/CurController.ts";
-import { authenticateToken } from "../../middleware/authenticate.ts";
-import { setupCurriculumSections } from "../../controllers/curriculumsController.ts";
+import * as CurriculumController from "../../controllers/ManageSchedControler/CurController.js";
+import { authenticateToken } from "../../middleware/authenticate.js";
+import { setupCurriculumSections } from "../../controllers/curriculumsController.js";
 
 const router = Router();
 

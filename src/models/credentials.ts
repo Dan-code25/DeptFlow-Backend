@@ -1,5 +1,5 @@
 import e from "express";
-import { supabase } from "../config/supabaseClient.ts";
+import { supabase } from "../config/supabaseClient.js";
 import { title } from "node:process";
 
 

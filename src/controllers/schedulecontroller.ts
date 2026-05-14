@@ -1,6 +1,6 @@
 import type { Response, Request } from "express";
-import type { AuthRequest } from "../middleware/authenticate.ts";
-import * as Schedule from "../models/scheduleassignment.ts";
+import type { AuthRequest } from "../middleware/authenticate.js";
+import * as Schedule from "../models/scheduleassignment.js";
 
 export const getAllSchedules = async (req: AuthRequest, res: Response) => {
   try {

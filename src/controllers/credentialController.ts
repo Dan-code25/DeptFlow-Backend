@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import type { AuthRequest } from "../middleware/authenticate.ts";
-import * as Credentials from "../models/credentials.ts";
+import type { AuthRequest } from "../middleware/authenticate.js";
+import * as Credentials from "../models/credentials.js";
 
 
 type Params <T extends string> = {

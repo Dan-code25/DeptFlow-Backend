@@ -1,8 +1,8 @@
 import { Router } from "express";
-import * as curriculumController from "../controllers/curriculumsController.ts";
+import * as curriculumController from "../controllers/curriculumsController.js";
 
 
-import { authenticateToken } from "../middleware/authenticate.ts";
+import { authenticateToken } from "../middleware/authenticate.js";
 
 const router = Router();
 router.get("/ping", (req, res) => {

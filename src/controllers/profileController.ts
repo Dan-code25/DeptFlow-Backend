@@ -1,11 +1,11 @@
 import type { Request, Response } from "express";
-import type { AuthRequest } from "../middleware/authenticate.ts";
+import type { AuthRequest } from "../middleware/authenticate.js";
 import {
   fetchUserProfileById,
   updateProfileData,
   updateProfilePicture,
   uploadImageToBucket,
-} from "../models/profile.ts";
+} from "../models/profile.js";
 
 export const getPersonalInfo = async (req: AuthRequest, res: Response) => {
   try {

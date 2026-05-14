@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import type { AuthRequest } from "../middleware/authenticate.ts";
-import * as Availability from "../models/availability.ts";
+import type { AuthRequest } from "../middleware/authenticate.js";
+import * as Availability from "../models/availability.js";
 
 export const saveAvailability = async (req: AuthRequest, res: Response) => {
   try {

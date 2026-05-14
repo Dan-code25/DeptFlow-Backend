@@ -1,6 +1,6 @@
 import type { Response } from "express";
-import type { AuthRequest } from "../../middleware/authenticate.ts";
-import * as Faculty from "../../models/ManagScheModel/MSfaculty.ts";
+import type { AuthRequest } from "../../middleware/authenticate.js";
+import * as Faculty from "../../models/ManagScheModel/MSfaculty.js";
 
 export const getAllFaculty = async (req: AuthRequest, res: Response) => {
   try {

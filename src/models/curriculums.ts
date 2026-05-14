@@ -1,4 +1,4 @@
-import { supabase } from "../config/supabaseClient.ts";
+import { supabase } from "../config/supabaseClient.js";
 
 // Fetch all curriculums (Programs and their nested sections)
 export const fetchAllCurriculums = async () => {

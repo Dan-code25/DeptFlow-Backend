@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
-import type { AuthRequest } from "../middleware/authenticate.ts";
-import * as Curriculums from "../models/curriculums.ts";
-import { CurriculumModel } from "../models/ManagScheModel/MScurriculum.ts";
+import type { AuthRequest } from "../middleware/authenticate.js";
+import * as Curriculums from "../models/curriculums.js";
+import { CurriculumModel } from "../models/ManagScheModel/MScurriculum.js";
 
 export const getAllCurriculums = async (req: AuthRequest, res: Response) => {
   try {

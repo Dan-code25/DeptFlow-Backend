@@ -1,6 +1,6 @@
 import type { Response } from "express";
-import type { AuthRequest } from "../middleware/authenticate.ts";
-import * as Period from "../models/academicperiod.ts";
+import type { AuthRequest } from "../middleware/authenticate.js";
+import * as Period from "../models/academicperiod.js";
 
 export const getAllPeriods = async (req: AuthRequest, res: Response) => {
   try {

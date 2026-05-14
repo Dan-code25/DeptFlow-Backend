@@ -1,7 +1,7 @@
 import { Router } from "express";
-import * as FacultyController from "../controllers/facultyController.ts";
-import * as AvailabilityController from "../controllers/availabilityController.ts";
-import { authenticateToken } from "../middleware/authenticate.ts";
+import * as FacultyController from "../controllers/facultyController.js";
+import * as AvailabilityController from "../controllers/availabilityController.js";
+import { authenticateToken } from "../middleware/authenticate.js";
 
 const router = Router();
 
