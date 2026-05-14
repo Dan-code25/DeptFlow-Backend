@@ -34,7 +34,7 @@ const PORT = process.env.PORT || 3000;
 
 
 // Middleware
-app.use(cors({ credentials: true, origin: /^http:\/\/localhost:\d{4}$/ }));
+app.use(cors({ credentials: true, origin: "*" }));
 app.use(express.json({limit: "50mb"}));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
