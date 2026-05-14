@@ -79,8 +79,16 @@ export const removeSubject = async (
     res.status(500).json({ error: "Internal server error" });
   }
   
+};
 
-
-  
+export const getSubjectCount = async (req: AuthRequest, res: Response) => {
+  try {
+    console.log("Getting subject count...");
+    const count = await Subjects.countSubjects();
+    res.status(200).json({ count });
+  } catch (error) {
+    console.error("Fetching subject count error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
 

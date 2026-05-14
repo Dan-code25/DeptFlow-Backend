@@ -1,13 +1,14 @@
 import { supabase } from "../config/supabaseClient.ts";
 
 export const fetchSubjects = async () => {
-  const { data: subjectData, error } = await supabase.from("subjects").select("*");
+  const { data: subjectData, error } = await supabase
+    .from("subjects")
+    .select("*");
   if (error) throw error;
   return [...subjectData];
-}
+};
 
-
-// Added Line for Manage Schedule Page (Backend) 
+// Added Line for Manage Schedule Page (Backend)
 
 export const fetchAllSubjects = async () => {
   const { data, error } = await supabase
@@ -17,10 +18,10 @@ export const fetchAllSubjects = async () => {
       subject_code,
       subject_name,
       units
-      `
+      `,
     )
     .or(
-      "subject_code.like.CS%,subject_code.like.CC%,subject_code.like.IS%,subject_code.like.IT%"
+      "subject_code.like.CS%,subject_code.like.CC%,subject_code.like.IS%,subject_code.like.IT%",
     )
     .order("subject_code", { ascending: true });
 
@@ -32,12 +33,13 @@ export const fetchAllSubjects = async () => {
 export const fetchSubjectByCode = async (subjectCode: string) => {
   const { data, error } = await supabase
     .from("subjects")
-    .select(`
+    .select(
+      `
       subject_code,
       subject_name,
-      units,
-      created_at
-    `)
+      units
+    `,
+    )
     .eq("subject_code", subjectCode)
     .single();
 
@@ -47,7 +49,6 @@ export const fetchSubjectByCode = async (subjectCode: string) => {
     code: data.subject_code,
     name: data.subject_name,
     units: data.units,
-    createdAt: data.created_at,
   };
 };
 
@@ -68,7 +69,7 @@ export const createSubject = async (subjectData: {
 
 export const updateSubject = async (
   subjectCode: string,
-  subjectData: Partial<{ subject_name: string; units: number }>
+  subjectData: Partial<{ subject_name: string; units: number }>,
 ) => {
   const { data, error } = await supabase
     .from("subjects")
@@ -89,4 +90,15 @@ export const deleteSubject = async (subjectCode: string) => {
 
   if (error) throw error;
   return true;
+};
+
+export const countSubjects = async () => {
+  console.log("Counting subjects...");
+  const { count, error } = await supabase
+    .from("subjects")
+    .select("*", { count: "exact", head: true });
+
+  if (error) throw error;
+
+  return count ?? 0;
 };

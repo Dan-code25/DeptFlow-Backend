@@ -16,7 +16,6 @@ export const fetchAllSchedules = async (periodId?: number) => {
       end_time,
       section,
       status,
-      is_ai_generated,
       created_at,
       faculty_profiles (
         faculty_id,
@@ -30,10 +29,10 @@ export const fetchAllSchedules = async (periodId?: number) => {
         units
       ),
       rooms (
-        room_id,
-        room_room,
-        room_type,
-        room_capacity
+        id,
+        room,
+        type,
+        capacity
       )
     `,
     )
@@ -63,14 +62,13 @@ export const fetchAllSchedules = async (periodId?: number) => {
       subjectName: s.subjects?.subject_name ?? "",
       units: s.subjects?.units ?? 0,
       roomId: s.room_id || s.other_room_id,
-      room: s.rooms?.room_room ?? null, // Change "TBA" to null
+      room: s.rooms?.room ?? null,
       isLab: s.rooms?.is_lab ?? false,
       day: s.day,
       startTime: s.start_time,
       endTime: s.end_time,
       section: s.section,
       status: s.status,
-      isAiGenerated: s.is_ai_generated,
       createdAt: s.created_at,
       otherFacultyId: s.other_faculty_id,
       otherRoomId: s.other_room_id,
@@ -91,12 +89,10 @@ export const fetchSchedulesByFaculty = async (facultyId: string) => {
       faculty_id,
       subject_id,
       room_id,
-      period_id,
       day,
       start_time,
       end_time,
       section,
-      is_ai_generated,
       created_at,
       subjects (
         subject_code,
@@ -104,16 +100,10 @@ export const fetchSchedulesByFaculty = async (facultyId: string) => {
         units
       ),
       rooms (
-        room_id,
-        room_room,
-        room_type,
-        room_capacity
-      ),
-      academic_periods (
-        period_id,
-        semester,
-        academic_year,
-        is_current
+        id,
+        room,
+        type,
+        capacity
       )
     `,
     )
@@ -126,18 +116,15 @@ export const fetchSchedulesByFaculty = async (facultyId: string) => {
   return data.map((s: any) => ({
     id: s.schedule_id,
     facultyId: s.faculty_id,
-    subjectCode: s.subject_code,
+    subjectCode: s.subject_id,
     subjectName: s.subjects?.subject_name ?? "",
     units: s.subjects?.units ?? 0,
-    roomId: s.room_id,
-    room: s.rooms?.room_room ?? "",
-    semester: s.academic_periods?.semester ?? "",
-    academicYear: s.academic_periods?.academic_year ?? "",
+    roomId: s.rooms?.id ?? null,
+    room: s.rooms?.room ?? "",
     day: s.day,
     startTime: s.start_time,
     endTime: s.end_time,
     section: s.section,
-    isAiGenerated: s.is_ai_generated,
     createdAt: s.created_at,
   }));
 };
@@ -154,12 +141,10 @@ export const fetchScheduleById = async (scheduleId: string) => {
       subject_id,
       room_id,
       other_room_id,
-      period_id,
       day,
       start_time,
       end_time,
       section,
-      is_ai_generated,
       created_at,
       faculty_profiles (
         faculty_id,
@@ -173,16 +158,10 @@ export const fetchScheduleById = async (scheduleId: string) => {
         units
       ),
       rooms (
-        room_id,
-        room_room,
-        room_type,
-        room_capacity
-      ),
-      academic_periods (
-        period_id,
-        semester,
-        academic_year,
-        is_current
+        id,
+        room,
+        type,
+        capacity
       )
     `,
     )
@@ -200,15 +179,12 @@ export const fetchScheduleById = async (scheduleId: string) => {
     subjectCode: data.subject_id,
     subjectName: (data as any).subjects?.subject_name ?? "",
     units: (data as any).subjects?.units ?? 0,
-    roomId: data.room_id,
-    room: (data as any).rooms?.room_room ?? "",
-    semester: (data as any).academic_periods?.semester ?? "",
-    academicYear: (data as any).academic_periods?.academic_year ?? "",
+    roomId: (data as any).rooms?.id ?? null,
+    room: (data as any).rooms?.room ?? "",
     day: data.day,
     startTime: data.start_time,
     endTime: data.end_time,
     section: data.section,
-    isAiGenerated: data.is_ai_generated,
     createdAt: data.created_at,
   };
 };
@@ -238,7 +214,6 @@ export const updateSchedule = async (
     subject_id: string;
     room_id: string | null;
     other_room_id: string | null; // uuid, optional
-    period_id: number;
     day: string;
     start_time: string;
     end_time: string;
@@ -353,6 +328,7 @@ export const fetchFacultyScheduleById = async (facultyId: string) => {
     `,
     )
     .eq("faculty_id", facultyId)
+    .eq("status", "published")
     .order("day", { ascending: true });
 
   if (error) throw error;
@@ -367,4 +343,49 @@ export const fetchFacultyScheduleById = async (facultyId: string) => {
     endTime: s.end_time,
     room: s.rooms?.room ?? "TBA",
   }));
+};
+
+export const countDraftSchedulesById = async () => {
+  const { count, error } = await supabase
+    .from("schedule_assignments")
+    .select("*", { count: "exact", head: true })
+    .eq("status", "draft");
+
+  if (error) throw error;
+
+  return count ?? 0;
+};
+
+export const getLoadUnitsByFacultyId = async (facultyId: string) => {
+  const { data: loadUnitsData, error: loadError } = await supabase
+    .from("schedule_assignments")
+    .select("subject_id, subjects(units)")
+    .eq("faculty_id", facultyId)
+    .eq("status", "published");
+
+  if (loadError) throw loadError;
+
+  const { data: maxUnitsData, error: maxUnitsError } = await supabase
+    .from("faculty_profiles")
+    .select("employment_type, load_policies(max_units)")
+    .eq("faculty_id", facultyId)
+    .single();
+
+  if (maxUnitsError) throw maxUnitsError;
+
+  const currentUnits =
+    loadUnitsData?.reduce((sum, item) => {
+      const subject = item.subjects as unknown as { units: number };
+      const units = subject?.units ?? 0;
+      return sum + units;
+    }, 0) ?? 0;
+
+  const policy = maxUnitsData?.load_policies as unknown as {
+    max_units: number;
+  };
+
+  return {
+    currentUnits: currentUnits,
+    maxUnits: policy?.max_units ?? 0,
+  };
 };

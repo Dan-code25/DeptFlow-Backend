@@ -18,10 +18,11 @@ router.get("/my-schedule", authenticateToken, scheduleController.getFacultySched
 
 // Then generic routes
 // Admin — all schedules (optional ?periodId query param)
-router.get("/", authenticateToken, scheduleController.getAllSchedules);
-
+router.get("/draft/count", authenticateToken, scheduleController.getDraftSchedulesCount);
+router.get("/load-units", authenticateToken, scheduleController.fetchLoadUnitsByFacultyId);
 // Single schedule (most generic, goes last)
 router.get("/:scheduleId", authenticateToken, scheduleController.getScheduleById);
+router.get("/", authenticateToken, scheduleController.getAllSchedules);
 
 router.post("/", authenticateToken, scheduleController.addSchedule);
 router.patch("/:scheduleId", authenticateToken, scheduleController.editSchedule);

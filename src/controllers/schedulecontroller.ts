@@ -182,3 +182,34 @@ export const getGeminiContext = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ error: error?.message || "Internal server error" });
   }
 };
+
+export const getDraftSchedulesCount = async (req: AuthRequest, res: Response) => {
+  try {
+    const facultyId = req.user?.id;
+    if (!facultyId) return res.status(401).json({ error: "Unauthorized" });
+
+    const count = await Schedule.countDraftSchedulesById();
+
+    res.status(200).json({ count });
+  } catch (error: any) {
+    console.error("Fetching draft schedules count error:", error?.message || error);
+    res.status(500).json({ error: error?.message || "Internal server error" });
+  }
+};
+
+export const fetchLoadUnitsByFacultyId = async (req: AuthRequest, res: Response) => {
+  try {
+    const facultyId = req.user?.id;
+    if (!facultyId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const unitsData = await Schedule.getLoadUnitsByFacultyId(facultyId);
+
+    res.status(200).json(unitsData);
+    
+  } catch (error: any) {
+    console.error("Fetching load units error:", error?.message || error);
+    res.status(500).json({ error: error?.message || "Internal server error" });
+  }
+};
