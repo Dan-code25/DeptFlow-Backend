@@ -10,4 +10,6 @@ router.get('/gender', authenticateToken, AnalyticsController.getGenderDistributi
 
 router.get('/employment-types', authenticateToken, AnalyticsController.getEmploymentTypesDistribution);
 
+router.get('/room-utilization', authenticateToken, AnalyticsController.fetchRoomUtilization);
+
 export default router;

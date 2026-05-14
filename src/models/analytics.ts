@@ -1,4 +1,10 @@
-import { supabase } from  "../config/supabaseClient.ts";
+import { supabase } from "../config/supabaseClient.ts";
+
+export interface RoomUtilization {
+  room_id: string;
+  room_name: string;
+  used_hours: number;
+}
 
 export const countByCoreGroup = async () => {
   const { data, error } = await supabase.from("core_group_counts").select("*");
@@ -41,4 +47,15 @@ export const countByEmploymentType = async () => {
     name: item.employment_type || "Unassigned",
     value: Number(item.total_count),
   }));
+};
+
+export const getRoomUtilization = async () => {
+  const { data, error } = await supabase
+    .from("room_utilization")
+    .select("*")
+    .order("used_hours", { ascending: false });
+
+  if (error) throw error;
+
+  return (data as RoomUtilization[]) || [];
 };
