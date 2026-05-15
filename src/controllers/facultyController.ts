@@ -4,6 +4,7 @@ import * as Faculty from "../models/profile.js";
 import * as Education from "../models/education.js";
 import * as Credentials from "../models/credentials.js";
 import * as Research from "../models/research.js";
+import { getLoadUnitsByFacultyId } from "../models/scheduleassignment.js";
 
 export const  getFacultyDashboard = async (req: AuthRequest, res: Response) => {
   try {
@@ -105,6 +106,18 @@ export const getFacultyResearch = async (req: AuthRequest & { params: { facultyI
     res.status(200).json(research);
   } catch (error) {
     console.log("Fetching faculty research error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+export const getFacultyLoadUnits = async (req: AuthRequest & { params: { facultyId: string } }, res: Response) => {
+  try{
+    console.log("Getting faculty load units...");
+    const { facultyId } = req.params;
+    const loadUnits = await getLoadUnitsByFacultyId(facultyId);
+    res.status(200).json(loadUnits);
+  } catch (error) {
+    console.log("Fetching faculty load units error:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 }

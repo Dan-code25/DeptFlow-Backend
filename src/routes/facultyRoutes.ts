@@ -17,6 +17,8 @@ router.get("/credentials/faculty/:facultyId", FacultyController.getFacultyCreden
 
 router.get("/research/faculty/:facultyId", FacultyController.getFacultyResearch);
 
+router.get("/load-units/:facultyId", FacultyController.getFacultyLoadUnits);
+
 
 router.post("/add-faculty", FacultyController.whitelistFaculty);
 
