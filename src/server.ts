@@ -80,6 +80,64 @@ app.use("/api/curriculums", curriculumsRoutes);
 app.use("/api/manage-schedule", otherRoutes);
 
 
+app.post('/api/gemini', async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { prompt, isJsonMode } = req.body;
+
+    if (!prompt) {
+      return res.status(400).json({ error: "Prompt is required" });
+    }
+
+    const apiKey = process.env.GEMINI_API_KEY;
+    const apiUrl = process.env.GEMINI_API_URL;
+
+    if (!apiKey || !apiUrl) {
+      console.error("Missing API Key or URL in .env file.");
+      return res.status(500).json({ error: "Server configuration error" });
+    }
+
+    // Securely combine the URL and the API key
+    const fullGoogleUrl = `${apiUrl}?key=${apiKey}`;
+
+    // Configure the generation based on what the frontend requested
+    const generationConfig: any = {
+      temperature: isJsonMode ? 0.7 : 0.1,
+    };
+
+    if (isJsonMode) {
+      generationConfig.responseMimeType = "application/json";
+      generationConfig.maxOutputTokens = 16000;
+    }
+
+    // Make the request to Google
+    const response = await fetch(fullGoogleUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: generationConfig,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Google API Error:", errorText);
+      return res.status(response.status).json({ error: "Failed to fetch from Gemini" });
+    }
+
+    const data = await response.json();
+    
+    // Send the data back to the frontend
+    return res.json(data);
+
+  } catch (error) {
+    console.error("Internal Server Error:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 
 // Dummy routes for testing
 app.use("/api/manage-schedule/curriculums", curRoutes);
